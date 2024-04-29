@@ -2,11 +2,15 @@ package com.dedyalwi.belajarfirebase
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
+import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 
 //Class Adapter ini Digunakan Untuk Mengatur Bagaimana Data akan Ditampilkan
@@ -49,6 +53,30 @@ class RecyclerViewAdapter( private val listMahasiswa: ArrayList<data_mahasiswa>,
         holder.ListItem.setOnLongClickListener(object : View.OnLongClickListener {
             override fun onLongClick(v: View?): Boolean {
 //Kodingan untuk fungsi Edit dan Delete, yang dibahas pada Tutorial Berikutnya.
+                holder.ListItem.setOnLongClickListener { view ->
+                    val action = arrayOf("Update", "Delete")
+                    val alert: AlertDialog.Builder = AlertDialog.Builder(view.context)
+                    alert.setItems(action, DialogInterface.OnClickListener { dialog, i ->
+                        when (i) {
+                            0 -> {
+                                /* Berpindah Activity pada halaman layout updateData dan mengambil data pada
+                                listMahasiswa, berdasarkan posisinya untuk dikirim pada activity selanjutnya */
+                                val bundle = Bundle()
+                                bundle.putString("dataNIM", listMahasiswa[position].nim)
+                                bundle.putString("dataNama", listMahasiswa[position].nama)
+                                bundle.putString("dataJurusan", listMahasiswa[position].jurusan)
+                                bundle.putString("getPrimaryKey", listMahasiswa[position].key)
+                                val intent = Intent(view.context, UpdateData::class.java)
+                                intent.putExtras(bundle)
+                                context.startActivity(intent)
+                            }
+                            1 -> {
+                            }
+                        }
+                    })
+                    alert.create()
+                    alert.show()
+                    true}
                 return true
             }
         })
