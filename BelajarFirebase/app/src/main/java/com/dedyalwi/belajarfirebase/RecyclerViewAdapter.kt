@@ -71,6 +71,8 @@ class RecyclerViewAdapter( private val listMahasiswa: ArrayList<data_mahasiswa>,
                                 context.startActivity(intent)
                             }
                             1 -> {
+                                //Menggunakan interface untuk mengirim data mahasiswa, yang akan dihapus
+                                listener?.onDeleteData(listMahasiswa.get(position), position)
                             }
                         }
                     })
@@ -86,9 +88,16 @@ class RecyclerViewAdapter( private val listMahasiswa: ArrayList<data_mahasiswa>,
         //Menghitung Ukuran/Jumlah Data Yang Akan Ditampilkan Pada RecyclerView
         return listMahasiswa.size
     }
+    //Membuat Interfece
+    interface dataListener {
+        fun onDeleteData(data: data_mahasiswa?, position: Int)
+    }
+    //Deklarasi objek dari Interfece
+    var listener: dataListener? = null
 
     //Membuat Konstruktor, untuk menerima input dari Database
     init {
         this.context = context
+        this.listener = context as MyListData //menambahkan baris ini saja
     }
 }
